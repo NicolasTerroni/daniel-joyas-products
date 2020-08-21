@@ -19,9 +19,8 @@ class Product:
 
 
 # -------------------------- Title + Logo ------------------------------------------------------------------------------------------------------------------------------------------------------------
-        lbl_title = Label(my_frame,text="Productos",font=("Copperplate Gothic Light",16)).grid(row=0,column=1,padx=10,pady=4,columnspan=2)
 
-        lbl_logo = Label(my_frame,image = IMG).grid(row=0,column=4,padx=10,pady=4,columnspan=2)
+        lbl_logo = Label(my_frame,image = IMG).grid(row=0,column=1,padx=10,pady=4,columnspan=5)
 
 # -------------------------- Labels -----------------------------------------------------------------------------------------------------------------------------------------------------------------
         lbl_id = Label(my_frame,text="ID: ",font=("Calibri",14))
