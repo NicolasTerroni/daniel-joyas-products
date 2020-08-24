@@ -1,6 +1,7 @@
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import *
+from functions import *
 
 # -------------------------- Root -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Product:
@@ -17,12 +18,12 @@ class Product:
         menubar = Menu(root)
         
         bbdd_menu = Menu(menubar,tearoff=0)
-        bbdd_menu.add_command(label="Conect")
+        bbdd_menu.add_command(label="Connect",command=connect)
         bbdd_menu.add_separator()
-        bbdd_menu.add_command(label="Exit")
+        bbdd_menu.add_command(label="Exit",command=root.destroy)
 
         help_menu = Menu(menubar,tearoff=0)
-        help_menu.add_command(label="User guide")
+        help_menu.add_command(label="User guide",command=show_help)
         help_menu.add_command(label="About..")
         
         menubar.add_cascade(label="BBDD",menu=bbdd_menu)
