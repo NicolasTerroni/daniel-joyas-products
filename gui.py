@@ -91,7 +91,7 @@ class Product:
 
         entry_stock = Entry(my_frame, textvariable=self.stock).grid(row=8,column=2,pady=4,sticky="w")
 # -------------------------- Buttons -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        create_button = Button(buttons_frame,text="CREATE").grid(row=1,column=1,padx=10,pady=4)
+        create_button = Button(buttons_frame,text="CREATE", command=self.create_product).grid(row=1,column=1,padx=10,pady=4)
 
         search_button = Button(buttons_frame,text="SEARCH").grid(row=1,column=2,padx=10,pady=4)
 
@@ -119,8 +119,8 @@ class Product:
         # headings
         self.table.heading("#0", text="ID",anchor=CENTER)
         self.table.heading("#1", text="NAME",anchor=CENTER)
-        self.table.heading("#2", text="PRICE",anchor=CENTER)
-        self.table.heading("#3", text="MATERIAL",anchor=CENTER)
+        self.table.heading("#2", text="MATERIAL",anchor=CENTER)
+        self.table.heading("#3", text="PRICE",anchor=CENTER)
         self.table.heading("#4", text="LARGE",anchor=CENTER)
         self.table.heading("#5", text="SIZE",anchor=CENTER)
         self.table.heading("#6", text="STOCK",anchor=CENTER)
@@ -157,12 +157,31 @@ class Product:
     
 
     def _run_query(self, query, parameters = ()):
-        
-        result = self.cursor.execute(query, parameters)
+        try:
+                result = self.cursor.execute(query, parameters)
+        except:
+                messagebox.showerror("Error","""Something went wrong.
+                
+        Check if you are connected to the database.
+
+        If you're manipulating the database check if you fill the fields correctly:
+
+        `ID` int(11) NOT NULL AUTO_INCREMENT
+
+        `NAME` varchar(45) NOT NULL
+
+        `MATERIAL` varchar(45) DEFAULT NULL
+
+        `PRICE` int(11) NOT NULL
+
+        `LARGE` varchar(45) DEFAULT NULL
+
+        `SIZE` varchar(45) DEFAULT NULL
+
+        `STOCK` varchar(45) NOT NULL DEFAULT '0'""")
 
         self.connection.commit()
         return result
-
 
     def show_help(self):
         messagebox.showinfo("User guide","""
@@ -184,6 +203,7 @@ class Product:
 
         BBDD > Exit to close the aplication.
         """)
+
 
     def exit_app(self):
             choice = messagebox.askquestion("Exit","Do you wish to close?")
@@ -207,11 +227,25 @@ class Product:
                 self.table.delete(element)
         
         
-        
     def create_product(self):
-        pass
+        input_name = self.name.get()
+        input_price = self.price.get()
+        input_material = self.material.get()
+        input_large = self.large.get()
+        input_size = self.size.get()
+        input_stock = self.stock.get()
+
+        query = f"INSERT INTO products(name,material,price,large,size,stock) VALUES('{input_name}','{input_material}',{input_price},'{input_large}','{input_size}',{input_stock});"
+
+        self._run_query(query)
+        
+        self.clear_gui()
+
+
     def search_product(self):
         pass
+
+
     def update_product(self):
         pass
     def delete_product(self):
@@ -222,13 +256,13 @@ class Product:
         self.clear_gui()
 
         query = "SELECT * FROM products ORDER BY id DESC;"
-
+        
         self._run_query(query)
-        db_rows = self.cursor.fetchall()
 
+        db_rows = self.cursor.fetchall()
+                
         for row in db_rows:
                 self.table.insert("",0, text = row[0], values = (row[1],row[2],row[3],row[4],row[5],row[6]))
-
 
 
 # -------------------------- EnterPoint -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
