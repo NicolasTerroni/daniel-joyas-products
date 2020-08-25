@@ -155,20 +155,14 @@ class Product:
         except:
                 messagebox.showinfo("Connection","BBDD already exists, connection established.")
     
-    def _run_query(self, query, parameters = ()):
-        self.connection = pymysql.connect(
-                host="localhost",
-                user="root",
-                password=password.contra,
-                db="daniel-joyas"
-                )
 
-        cursor = self.connection.cursor()
-        result = cursor.execute(query, parameters)
+    def _run_query(self, query, parameters = ()):
+        
+        result = self.cursor.execute(query, parameters)
 
         self.connection.commit()
-        self.connection.close()
         return result
+
 
     def show_help(self):
         messagebox.showinfo("User guide","""
@@ -195,7 +189,9 @@ class Product:
             choice = messagebox.askquestion("Exit","Do you wish to close?")
 
             if choice == "yes":
-                    root.destroy()
+                self.connection.close()
+                root.destroy()
+
 
     def clear_gui(self):
         self.uid.set("")
@@ -224,10 +220,15 @@ class Product:
 
     def list_products(self):
         self.clear_gui()
-        query = "SELECT * FROM `daniel-joyas`.products ORDER BY name DESC;"
-        db_rows = self._run_query(query)
+
+        query = "SELECT * FROM products ORDER BY id DESC;"
+
+        self._run_query(query)
+        db_rows = self.cursor.fetchall()
+
         for row in db_rows:
-                print(row)
+                self.table.insert("",0, text = row[0], values = (row[1],row[2],row[3],row[4],row[5],row[6]))
+
 
 
 # -------------------------- EnterPoint -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
