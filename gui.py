@@ -93,7 +93,7 @@ class Product:
 # -------------------------- Buttons -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         create_button = Button(buttons_frame,text="CREATE", command=self.create_product).grid(row=1,column=1,padx=10,pady=4)
 
-        search_button = Button(buttons_frame,text="SEARCH").grid(row=1,column=2,padx=10,pady=4)
+        search_button = Button(buttons_frame,text="SEARCH", command = self.search_product).grid(row=1,column=2,padx=10,pady=4)
 
         update_button = Button(buttons_frame,text="UPDATE").grid(row=1,column=3,padx=10,pady=4)
 
@@ -160,25 +160,11 @@ class Product:
         try:
                 result = self.cursor.execute(query, parameters)
         except:
-                messagebox.showerror("Error","""Something went wrong.
+                messagebox.showerror("Error","""Something went wrong executing the query
                 
         Check if you are connected to the database.
 
-        If you're manipulating the database check if you fill the fields correctly:
-
-        `ID` int(11) NOT NULL AUTO_INCREMENT
-
-        `NAME` varchar(45) NOT NULL
-
-        `MATERIAL` varchar(45) DEFAULT NULL
-
-        `PRICE` int(11) NOT NULL
-
-        `LARGE` varchar(45) DEFAULT NULL
-
-        `SIZE` varchar(45) DEFAULT NULL
-
-        `STOCK` varchar(45) NOT NULL DEFAULT '0'""")
+        If you are manipulating the database, check if you filled in the fields correctly'""")
 
         self.connection.commit()
         return result
@@ -243,13 +229,33 @@ class Product:
 
 
     def search_product(self):
-        pass
+        input_uid = self.uid.get()
+        query = f"SELECT * FROM products WHERE id={input_uid};"
+
+        try:
+                self._run_query(query)
+                db_row = self.cursor.fetchone()
+                self.clear_gui()
+                self.table.insert("",0, text = db_row[0], values = (db_row[1],db_row[2],db_row[3],db_row[4],db_row[5],db_row[6]))
+        except:
+                messagebox.showinfo("Search","Product ID doesn't exist.")
+
+
 
 
     def update_product(self):
         pass
+
+
     def delete_product(self):
-        pass
+            pass
+        #input_uid = self.uid.get()
+
+        #query = f"DELETE FROM products WHERE id={input_uid}"
+
+        #messagebox.askquestion("Delete",f"Are you sure you want to delete the product{}")
+        #self._run_query(query)
+
 
 
     def list_products(self):
