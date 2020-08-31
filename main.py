@@ -90,6 +90,7 @@ class Product:
         entry_size = Entry(my_frame, textvariable=self.size).grid(row=7,column=2,pady=4,sticky="w")
 
         entry_stock = Entry(my_frame, textvariable=self.stock).grid(row=8,column=2,pady=4,sticky="w")
+
 # -------------------------- Buttons -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         create_button = Button(buttons_frame,text="CREATE", command=self.create_product).grid(row=1,column=1,padx=10,pady=4)
 
@@ -102,6 +103,7 @@ class Product:
         list_button = Button(buttons_frame,text="LIST ALL", command= self.list_products).grid(row=1,column=5,padx=10,pady=4)
 
         clear_button = Button(buttons_frame,text="CLEAR ALL", command = self.clear_gui).grid(row=1,column=6,padx=10,pady=4)
+        
 # -------------------------- Table -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
         self.table = ttk.Treeview(my_frame,height =11)
