@@ -172,7 +172,9 @@ Something went wrong executing the query.
 
 Check if you are connected to the database.
 
-If you are trying to manipulate data, check if you filled in the fields correctly.'""")
+If you are trying to manipulate data, check if you filled in the fields correctly.
+
+If you were using delete or update you must select a register on the table before.'""")
 
         self.connection.commit()
         return result
@@ -288,16 +290,23 @@ If you are trying to manipulate data, check if you filled in the fields correctl
 
 
     def delete_product(self):
-        """Gets id, deletes a product"""
+        """Deletes the selected record."""
+        
+        selected_product_id = self.table.item(self.table.selection())["text"]
+        query = f"DELETE FROM products WHERE id={selected_product_id}"
 
-        input_uid = self.uid.get()
-        query = f"DELETE FROM products WHERE id={input_uid}"
-
-        question = messagebox.askquestion("Delete",f"Are you sure you want to delete the product id={input_uid} ?")
-        if question == "yes":
+        try:
             self._run_query(query)
-            messagebox.showinfo("Delete","Product deleted.")
-            self.list_products()
+            self.lbl_output["text"] = f"Product {selected_product_id} deleted."
+
+        except:
+            self.lbl_output["text"] = f"No record selected to delete."
+        
+        finally:
+                self.list_products()
+
+            
+
 
 
     def list_products(self):
