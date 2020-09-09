@@ -98,7 +98,7 @@ class Product:
 
         search_button = Button(buttons_frame,text="SEARCH", command = self.search_product).grid(row=1,column=2,padx=10,pady=4)
 
-        update_button = Button(buttons_frame,text="UPDATE", command = self.update_product).grid(row=1,column=3,padx=10,pady=4)
+        update_button = Button(buttons_frame,text="UPDATE", command = self.update_product_window).grid(row=1,column=3,padx=10,pady=4)
 
         delete_button = Button(buttons_frame,text="DELETE", command = self.delete_product).grid(row=1,column=4,padx=10,pady=4)
 
@@ -269,24 +269,46 @@ If you were using delete or update you must select a register on the table befor
             messagebox.showinfo("Search","Product ID doesn't exist.")
 
 
-    def update_product(self):
-        """change"""
-        input_uid = self.uid.get()
-        input_name = self.name.get()
-        input_price = self.price.get()
-        input_material = self.material.get()
-        input_large = self.large.get()
-        input_size = self.size.get()
-        input_stock = self.stock.get()
 
-        query = f"UPDATE products SET name='{input_name}',material='{input_material}',price={input_price},large='{input_large}',size='{input_size}',stock={input_stock} WHERE id={input_uid};"
+    def update_product_window(self):
 
-        question = messagebox.askquestion("Update",f"Are you sure you want to update the product id={input_uid} ?")
+        #Get selected values
+        selected_product = self.table.item(self.table.selection())
+        selected_product_id = selected_product["text"]
+        old_name = selected_product["values"][0]
+        old_price = selected_product["values"][2]
+        old_material = selected_product["values"][1]
+        old_large = selected_product["values"][3]
+        old_size = selected_product["values"][4]
+        old_stock = selected_product["values"][5]
 
-        if question == "yes":
-            self._run_query(query)
-            messagebox.showinfo("Update","Product updated.")
-            self.list_products()
+        #Window
+        self.update_window = Toplevel()
+        self.update_window.title("Update product")
+        #Old product labels
+        selected_product_id_lbl = Label(self.update_window, text= f"UPDATING PRODUCT ID: {selected_product_id}").grid(row=1,column=1,padx=4,pady=4,sticky=W)
+        old_name_lbl = Label(self.update_window, text= f"Old name: '{old_name}''",fg="#7F7F7F").grid(row=2,column=1,padx=4,pady=4,sticky=W)
+        old_price_lbl = Label(self.update_window, text= f"Old price: {old_price}",fg="#7F7F7F").grid(row=3,column=1,padx=4,pady=4,sticky=W)
+        old_material_lbl = Label(self.update_window, text= f"Old material: '{old_material}''",fg="#7F7F7F").grid(row=4,column=1,padx=4,pady=4,sticky=W)
+        old_large_lbl = Label(self.update_window, text= f"Old large: '{old_large}''",fg="#7F7F7F").grid(row=5,column=1,padx=4,pady=4,sticky=W)
+        old_size_lbl = Label(self.update_window, text= f"Old size: '{old_size}''",fg="#7F7F7F").grid(row=6,column=1,padx=4,pady=4,sticky=W)
+        old_stock_lbl = Label(self.update_window, text= f"Old stock: {old_stock}",fg="#7F7F7F").grid(row=7,column=1,padx=4,pady=4,sticky=W)
+        # New product labels
+        new_name_lbl = Label(self.update_window, text= "New name: ").grid(row=2,column=2,padx=4,pady=4,sticky=W)
+        new_price_lbl = Label(self.update_window, text= "New price: ").grid(row=3,column=2,padx=4,pady=4,sticky=W)
+        new_material_lbl = Label(self.update_window, text= "New material: ").grid(row=4,column=2,padx=4,pady=4,sticky=W)
+        new_large_lbl = Label(self.update_window, text= "New large: ").grid(row=5,column=2,padx=4,pady=4,sticky=W)
+        new_size_lbl = Label(self.update_window, text= "New size: ").grid(row=6,column=2,padx=4,pady=4,sticky=W)
+        new_stock_lbl = Label(self.update_window, text= "New stock: ").grid(row=7,column=2,padx=4,pady=4,sticky=W)
+        # Entrys
+        new_name = Entry(self.update_window).grid(row=2,column=3,padx=4,pady=4,sticky=W)
+        new_price = Entry(self.update_window).grid(row=3,column=3,padx=4,pady=4,sticky=W)
+        new_material = Entry(self.update_window).grid(row=4,column=3,padx=4,pady=4,sticky=W)
+        new_large = Entry(self.update_window).grid(row=5,column=3,padx=4,pady=4,sticky=W)
+        new_size = Entry(self.update_window).grid(row=6,column=3,padx=4,pady=4,sticky=W)
+        new_stock = Entry(self.update_window).grid(row=7,column=3,padx=4,pady=4,sticky=W)
+        # Button
+        updt_button = Button(self.update_window, text="UPDATE").grid(row=8,column=2,padx=4,pady=4,columnspan=2)
 
 
     def delete_product(self):
@@ -306,8 +328,6 @@ If you were using delete or update you must select a register on the table befor
             
             finally:
                     self.list_products()
-
-            
 
 
 
