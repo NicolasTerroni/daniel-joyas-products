@@ -270,7 +270,7 @@ If you were using delete or update you must select a register on the table befor
 
 
     def update_product(self):
-        """Gets new data, updates an existing product"""
+        """change"""
         input_uid = self.uid.get()
         input_name = self.name.get()
         input_price = self.price.get()
@@ -295,15 +295,17 @@ If you were using delete or update you must select a register on the table befor
         selected_product_id = self.table.item(self.table.selection())["text"]
         query = f"DELETE FROM products WHERE id={selected_product_id}"
 
-        try:
-            self._run_query(query)
-            self.lbl_output["text"] = f"Product {selected_product_id} deleted."
+        question = messagebox.askquestion("Delete",f"Are you sure you want to delete the product id={selected_product_id} ?")
+        if question == "yes":
+            try:
+                self._run_query(query)
+                self.lbl_output["text"] = f"Product {selected_product_id} deleted."
 
-        except:
-            self.lbl_output["text"] = f"No record selected to delete."
-        
-        finally:
-                self.list_products()
+            except:
+                self.lbl_output["text"] = f"No record selected to delete."
+            
+            finally:
+                    self.list_products()
 
             
 
