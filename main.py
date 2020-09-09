@@ -12,6 +12,7 @@ class Product:
         self.widgets()
 
     def widgets(self):
+        """Window widgets"""
 # -------------------------- Menu ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         menubar = Menu(root)
@@ -65,8 +66,9 @@ class Product:
         lbl_stock = Label(my_frame,text="STOCK: ",font=("Calibri",14))
         lbl_stock.grid(row=8,column=1,padx=10,pady=4,sticky="w")
 
-        # lbl_info = Label(my_frame,text = """------------------------------------------------------------------------------------------------------------------------------""")
-        # lbl_info.grid(row=9,column=3,padx=10,pady=4,columnspan=7,rowspan=2)
+        # Output label
+        # lbl_output = Label(my_frame,text = "",fg = "#969696")
+        # lbl_output.grid(row=1,column=3,padx=10,pady=4,columnspan=7,sticky=W + E)
 
 # -------------------------- Entrys -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         self.uid = IntVar()
@@ -104,8 +106,7 @@ class Product:
 
         clear_button = Button(buttons_frame,text="CLEAR ALL", command = self.clear_gui).grid(row=1,column=6,padx=10,pady=4)
         
-# -------------------------- Table -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+# -------------------------- Table ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
         self.table = ttk.Treeview(my_frame,height =11)
         self.table.grid(row=2,column=3,padx=10,pady=4,rowspan=7,columnspan=7)
         
@@ -128,14 +129,14 @@ class Product:
         self.table.heading("#6", text="STOCK",anchor=CENTER)
 
 
-
 #---------------------------Functions -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def connect(self):
+        """Connects to the database (or creates it if not exists)"""
         self.connection = pymysql.connect(
-                host="localhost",
-                user="root",
-                password=password.contra,
-                db="daniel-joyas"
+            host="localhost",
+            user="root",
+            password=password.contra,
+            db="daniel-joyas"
                 )
 
         self.cursor = self.connection.cursor()    
@@ -152,17 +153,20 @@ class Product:
         PRIMARY KEY (`id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;"""
         try:
-                self.cursor.execute(query)
-                messagebox.showinfo("Connected","BBDD created. Connection established.") 
+            self.cursor.execute(query)
+            messagebox.showinfo("Connected","BBDD created. Connection established.")
         except:
-                messagebox.showinfo("Connection","BBDD already exists, connection established.")
-    
+            messagebox.showinfo("Connection","BBDD already exists, connection established.")
+        finally:
+            self.list_products()
 
-    def _run_query(self, query, parameters = ()):
+
+    def _run_query(self, query):
+        """Tries to run a query"""
         try:
-                result = self.cursor.execute(query, parameters)
+            result = self.cursor.execute(query)
         except:
-                messagebox.showerror("Error","""
+            messagebox.showerror("Error","""
 Something went wrong executing the query.
 
 Check if you are connected to the database.
@@ -174,6 +178,7 @@ If you are trying to manipulate data, check if you filled in the fields correctl
 
 
     def show_help(self):
+        """Shows the help window"""
         messagebox.showinfo("User guide","""
         Start conecting with the database by BBDD > Connect
 
@@ -196,18 +201,23 @@ If you are trying to manipulate data, check if you filled in the fields correctl
 
 
     def exit_app(self):
-            choice = messagebox.askquestion("Exit","Do you wish to close?")
+        """Closes the app"""
+        choice = messagebox.askquestion("Exit","Do you wish to close?")
 
-            if choice == "yes":
-                self.connection.close()
-                root.destroy()
+        if choice == "yes":
+            self.connection.close()
+            root.destroy()
 
-    def clear_table(self):
+
+    def _clear_table(self):
+        """Clears the table's content"""
         records = self.table.get_children()
         for element in records:
                 self.table.delete(element)
 
+
     def clear_gui(self):
+        """Clears all the entrys and the table"""
         self.uid.set("")
         self.name.set("")
         self.price.set("")
@@ -215,12 +225,11 @@ If you are trying to manipulate data, check if you filled in the fields correctl
         self.large.set("")
         self.size.set("")
         self.stock.set("")
-        self.clear_table()
-
-
+        self._clear_table()
         
         
     def create_product(self):
+        """Gets data, creates a product"""
         input_name = self.name.get()
         input_price = self.price.get()
         input_material = self.material.get()
@@ -231,11 +240,11 @@ If you are trying to manipulate data, check if you filled in the fields correctl
         query = f"INSERT INTO products(name,material,price,large,size,stock) VALUES('{input_name}','{input_material}',{input_price},'{input_large}','{input_size}',{input_stock});"
 
         self._run_query(query)
-        
-        self.clear_gui()
+        self.list_products()
 
 
     def search_product(self):
+        """Gets id, shows a product"""
         input_uid = self.uid.get()
         query = f"SELECT * FROM products WHERE id={input_uid};"
 
@@ -249,6 +258,7 @@ If you are trying to manipulate data, check if you filled in the fields correctl
 
 
     def update_product(self):
+        """Gets new data, updates an existing product"""
         input_uid = self.uid.get()
         input_name = self.name.get()
         input_price = self.price.get()
@@ -259,44 +269,40 @@ If you are trying to manipulate data, check if you filled in the fields correctl
 
         query = f"UPDATE products SET name='{input_name}',material='{input_material}',price={input_price},large='{input_large}',size='{input_size}',stock={input_stock} WHERE id={input_uid};"
 
-        try:
-                self._run_query(query)
-                self.clear_gui()
-                messagebox.showinfo("Update","Product updated.")
-        except:
-                messagebox.showinfo("Update","Product ID doesn't exist.")
+        question = messagebox.askquestion("Update",f"Are you sure you want to update the product id={input_uid} ?")
 
+        if question == "yes":
+            self._run_query(query)
+            messagebox.showinfo("Update","Product updated.")
+            self.list_products()
 
 
     def delete_product(self):
+        """Gets id, deletes a product"""
+
         input_uid = self.uid.get()
         query = f"DELETE FROM products WHERE id={input_uid}"
 
         question = messagebox.askquestion("Delete",f"Are you sure you want to delete the product id={input_uid} ?")
         if question == "yes":
-                try:
-                        self._run_query(query)
-                        messagebox.showinfo("Delete","Product deleted.")
-                except:
-                        messagebox.showinfo("Delete","Product ID doesn't exist.")
-
+            self._run_query(query)
+            messagebox.showinfo("Delete","Product deleted.")
+            self.list_products()
 
 
     def list_products(self):
+        """Show all products on the table"""
         self.clear_gui()
 
         query = "SELECT * FROM products ORDER BY id DESC;"
-        
         self._run_query(query)
 
         db_rows = self.cursor.fetchall()
-                
         for row in db_rows:
-                self.table.insert("",0, text = row[0], values = (row[1],row[2],row[3],row[4],row[5],row[6]))
+            self.table.insert("",0, text = row[0], values = (row[1],row[2],row[3],row[4],row[5],row[6]))
 
 
 # -------------------------- EnterPoint -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 if __name__ == "__main__":
     root = Tk()
     root.title("PRODUCTS - DANIEL JOYAS")
