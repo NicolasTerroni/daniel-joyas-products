@@ -67,17 +67,17 @@ class Product:
         lbl_stock.grid(row=8,column=1,padx=10,pady=4,sticky="w")
 
         # Output label
-        # lbl_output = Label(my_frame,text = "",fg = "#969696")
-        # lbl_output.grid(row=1,column=3,padx=10,pady=4,columnspan=7,sticky=W + E)
+        self.lbl_output = Label(my_frame,text = "Disconnected",fg = "#969696")
+        self.lbl_output.grid(row=1,column=3,padx=10,pady=4,columnspan=7,sticky=W + E)
 
 # -------------------------- Entrys -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        self.uid = IntVar()
+        self.uid = StringVar()
         self.name = StringVar()
-        self.price = IntVar()
+        self.price = StringVar()
         self.material = StringVar()
         self.large = StringVar()
         self.size = StringVar()
-        self.stock = IntVar()
+        self.stock = StringVar()
         
         entry_id = Entry(my_frame, textvariable=self.uid ).grid(row=2,column=2,pady=4,sticky="w")
 
@@ -158,6 +158,7 @@ class Product:
         except:
             messagebox.showinfo("Connection","BBDD already exists, connection established.")
         finally:
+            self.lbl_output["text"] = "Connection established."
             self.list_products()
 
 
@@ -227,7 +228,11 @@ If you are trying to manipulate data, check if you filled in the fields correctl
         self.stock.set("")
         self._clear_table()
         
-        
+
+    def _validation(self):
+        return len(self.name.get()) != 0 and len(self.price.get()) != 0
+
+
     def create_product(self):
         """Gets data, creates a product"""
         input_name = self.name.get()
@@ -237,10 +242,15 @@ If you are trying to manipulate data, check if you filled in the fields correctl
         input_size = self.size.get()
         input_stock = self.stock.get()
 
-        query = f"INSERT INTO products(name,material,price,large,size,stock) VALUES('{input_name}','{input_material}',{input_price},'{input_large}','{input_size}',{input_stock});"
+        query = f"INSERT INTO products(name,material,price,large,size,stock) VALUES('{input_name}','{input_material}',{input_price},'{input_large}','{input_size}',{input_stock});"     
+        
+        if self._validation():
+            self._run_query(query)
+            self.lbl_output["text"] = f"Product '{input_name}' created successfully."
+            self.list_products()
+        else:
+            self.lbl_output["text"] = f"Product creation failed. Check if you entered the fields correctly"
 
-        self._run_query(query)
-        self.list_products()
 
 
     def search_product(self):
@@ -249,12 +259,12 @@ If you are trying to manipulate data, check if you filled in the fields correctl
         query = f"SELECT * FROM products WHERE id={input_uid};"
 
         try:
-                self._run_query(query)
-                db_row = self.cursor.fetchone()
-                self.clear_gui()
-                self.table.insert("",0, text = db_row[0], values = (db_row[1],db_row[2],db_row[3],db_row[4],db_row[5],db_row[6]))
+            self._run_query(query)
+            db_row = self.cursor.fetchone()
+            self.clear_gui()
+            self.table.insert("",0, text = db_row[0], values = (db_row[1],db_row[2],db_row[3],db_row[4],db_row[5],db_row[6]))
         except:
-                messagebox.showinfo("Search","Product ID doesn't exist.")
+            messagebox.showinfo("Search","Product ID doesn't exist.")
 
 
     def update_product(self):
