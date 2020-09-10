@@ -271,51 +271,80 @@ If you were using delete or update you must select a register on the table befor
 
 
     def update_product_window(self):
+        """Open the update window"""
 
-        #Get selected values
         selected_product = self.table.item(self.table.selection())
-        selected_product_id = selected_product["text"]
-        old_name = selected_product["values"][0]
-        old_price = selected_product["values"][2]
-        old_material = selected_product["values"][1]
-        old_large = selected_product["values"][3]
-        old_size = selected_product["values"][4]
-        old_stock = selected_product["values"][5]
 
-        #Window
-        self.update_window = Toplevel()
-        self.update_window.title("Update product")
-        #Old product labels
-        selected_product_id_lbl = Label(self.update_window, text= f"UPDATING PRODUCT ID: {selected_product_id}").grid(row=1,column=1,padx=4,pady=4,sticky=W)
-        old_name_lbl = Label(self.update_window, text= f"Old name: '{old_name}''",fg="#7F7F7F").grid(row=2,column=1,padx=4,pady=4,sticky=W)
-        old_price_lbl = Label(self.update_window, text= f"Old price: {old_price}",fg="#7F7F7F").grid(row=3,column=1,padx=4,pady=4,sticky=W)
-        old_material_lbl = Label(self.update_window, text= f"Old material: '{old_material}''",fg="#7F7F7F").grid(row=4,column=1,padx=4,pady=4,sticky=W)
-        old_large_lbl = Label(self.update_window, text= f"Old large: '{old_large}''",fg="#7F7F7F").grid(row=5,column=1,padx=4,pady=4,sticky=W)
-        old_size_lbl = Label(self.update_window, text= f"Old size: '{old_size}''",fg="#7F7F7F").grid(row=6,column=1,padx=4,pady=4,sticky=W)
-        old_stock_lbl = Label(self.update_window, text= f"Old stock: {old_stock}",fg="#7F7F7F").grid(row=7,column=1,padx=4,pady=4,sticky=W)
-        # New product labels
-        new_name_lbl = Label(self.update_window, text= "New name: ").grid(row=2,column=2,padx=4,pady=4,sticky=W)
-        new_price_lbl = Label(self.update_window, text= "New price: ").grid(row=3,column=2,padx=4,pady=4,sticky=W)
-        new_material_lbl = Label(self.update_window, text= "New material: ").grid(row=4,column=2,padx=4,pady=4,sticky=W)
-        new_large_lbl = Label(self.update_window, text= "New large: ").grid(row=5,column=2,padx=4,pady=4,sticky=W)
-        new_size_lbl = Label(self.update_window, text= "New size: ").grid(row=6,column=2,padx=4,pady=4,sticky=W)
-        new_stock_lbl = Label(self.update_window, text= "New stock: ").grid(row=7,column=2,padx=4,pady=4,sticky=W)
-        # Entrys
-        new_name = Entry(self.update_window).grid(row=2,column=3,padx=4,pady=4,sticky=W)
-        new_price = Entry(self.update_window).grid(row=3,column=3,padx=4,pady=4,sticky=W)
-        new_material = Entry(self.update_window).grid(row=4,column=3,padx=4,pady=4,sticky=W)
-        new_large = Entry(self.update_window).grid(row=5,column=3,padx=4,pady=4,sticky=W)
-        new_size = Entry(self.update_window).grid(row=6,column=3,padx=4,pady=4,sticky=W)
-        new_stock = Entry(self.update_window).grid(row=7,column=3,padx=4,pady=4,sticky=W)
-        # Button
-        updt_button = Button(self.update_window, text="UPDATE").grid(row=8,column=2,padx=4,pady=4,columnspan=2)
+        try:
+            #Get selected values
+            selected_product_id = selected_product["text"]
+            old_name = selected_product["values"][0]
+            old_material = selected_product["values"][1]
+            old_price = selected_product["values"][2]
+            old_large = selected_product["values"][3]
+            old_size = selected_product["values"][4]
+            old_stock = selected_product["values"][5]
+            
+            #Window
+            self.update_window = Toplevel()
+            self.update_window.title("Update product")
+
+            #Old product labels
+            selected_product_id_lbl = Label(self.update_window, text= f"UPDATING PRODUCT ID: {selected_product_id}").grid(row=1,column=1,padx=4,pady=4,sticky=W)
+            old_name_lbl = Label(self.update_window, text= f"Old name: '{old_name}''",fg="#7F7F7F").grid(row=2,column=1,padx=4,pady=4,sticky=W)
+            old_price_lbl = Label(self.update_window, text= f"Old price: {old_price}",fg="#7F7F7F").grid(row=3,column=1,padx=4,pady=4,sticky=W)
+            old_material_lbl = Label(self.update_window, text= f"Old material: '{old_material}''",fg="#7F7F7F").grid(row=4,column=1,padx=4,pady=4,sticky=W)
+            old_large_lbl = Label(self.update_window, text= f"Old large: '{old_large}''",fg="#7F7F7F").grid(row=5,column=1,padx=4,pady=4,sticky=W)
+            old_size_lbl = Label(self.update_window, text= f"Old size: '{old_size}''",fg="#7F7F7F").grid(row=6,column=1,padx=4,pady=4,sticky=W)
+            old_stock_lbl = Label(self.update_window, text= f"Old stock: {old_stock}",fg="#7F7F7F").grid(row=7,column=1,padx=4,pady=4,sticky=W)
+            # New product labels
+            new_name_lbl = Label(self.update_window, text= "New name: ").grid(row=2,column=2,padx=4,pady=4,sticky=W)
+            new_price_lbl = Label(self.update_window, text= "New price: ").grid(row=3,column=2,padx=4,pady=4,sticky=W)
+            new_material_lbl = Label(self.update_window, text= "New material: ").grid(row=4,column=2,padx=4,pady=4,sticky=W)
+            new_large_lbl = Label(self.update_window, text= "New large: ").grid(row=5,column=2,padx=4,pady=4,sticky=W)
+            new_size_lbl = Label(self.update_window, text= "New size: ").grid(row=6,column=2,padx=4,pady=4,sticky=W)
+            new_stock_lbl = Label(self.update_window, text= "New stock: ").grid(row=7,column=2,padx=4,pady=4,sticky=W)
+            # Entrys
+            upd_name = StringVar()
+            upd_price = StringVar()
+            upd_material = StringVar()
+            upd_large = StringVar()
+            upd_size = StringVar()
+            upd_stock = StringVar()
+
+            new_name = Entry(self.update_window, textvariable= upd_name).grid(row=2,column=3,padx=4,pady=4,sticky=W)
+            new_price = Entry(self.update_window, textvariable= upd_price).grid(row=3,column=3,padx=4,pady=4,sticky=W)
+            new_material = Entry(self.update_window, textvariable= upd_material).grid(row=4,column=3,padx=4,pady=4,sticky=W)
+            new_large = Entry(self.update_window, textvariable= upd_large).grid(row=5,column=3,padx=4,pady=4,sticky=W)
+            new_size = Entry(self.update_window, textvariable= upd_size).grid(row=6,column=3,padx=4,pady=4,sticky=W)
+            new_stock = Entry(self.update_window, textvariable= upd_stock).grid(row=7,column=3,padx=4,pady=4,sticky=W)
+            # Button
+            updt_button = Button(self.update_window, text="CONFIRM UPDATE", command = lambda: self.update_product(upd_name.get(),upd_price.get(),upd_material.get(),upd_large.get(),upd_size.get(),upd_stock.get(),selected_product_id)).grid(row=8,column=2,padx=4,pady=4,columnspan=2)
+
+        except IndexError:
+            self.lbl_output["text"] = f"No record selected to update."
+
+
+    def update_product(self, upd_name, upd_price, upd_material, upd_large, upd_size, upd_stock, selected_product_id):
+        """Executes the update query"""
+
+        query = f"UPDATE products SET name='{upd_name}', price={upd_price}, material='{upd_material}', large='{upd_large}', size='{upd_size}', stock='{upd_stock}' WHERE id={selected_product_id}"
+        
+        question = messagebox.askquestion("Update",f"Are you sure you want to update the product id={selected_product_id} ?")
+        if question == "yes":
+            self._run_query(query)
+            self.update_window.destroy()
+            self.lbl_output["text"] = f"Product {selected_product_id} updated."
+            self.list_products()
+
+
 
 
     def delete_product(self):
         """Deletes the selected record."""
         
         selected_product_id = self.table.item(self.table.selection())["text"]
-        query = f"DELETE FROM products WHERE id={selected_product_id}"
+        query = f"DELETE FROM products WHERE id={selected_product_id};"
 
         question = messagebox.askquestion("Delete",f"Are you sure you want to delete the product id={selected_product_id} ?")
         if question == "yes":
