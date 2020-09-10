@@ -18,3 +18,10 @@ It connects to a MySQL database, allowing the user to:
 - MySQL
 - Tkinter
 - Git
+
+#### About me:
+Nicolas Silo Terroni
+Github: https://github.com/NicolasTerroni
+Mail: nsterroni@gmail.com
+Celular: 2364330131
+Instagram: https://www.instagram.com/nicolasterroni/

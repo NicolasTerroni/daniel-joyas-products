@@ -23,7 +23,7 @@ class Product:
 
         help_menu = Menu(menubar,tearoff=0)
         help_menu.add_command(label="User guide",command=self.show_help)
-        help_menu.add_command(label="About..")
+        help_menu.add_command(label="About me..",command= self.show_about_me)
         
         menubar.add_cascade(label="BBDD",menu=bbdd_menu)
         menubar.add_cascade(label="Help",menu=help_menu)
@@ -202,6 +202,16 @@ If you were using delete or update you must select a register on the table befor
 
 
         BBDD > Exit to close the aplication.
+        """)
+
+    def show_about_me(self):
+        """Show the author's info"""
+        messagebox.showinfo("About me","""
+        Nicolas Silo Terroni
+        Github: github.com/NicolasTerroni
+        Mail: nsterroni@gmail.com
+        Phone:+54 2364 330131
+        Instagram: instagram.com/nicolasterroni
         """)
 
 
